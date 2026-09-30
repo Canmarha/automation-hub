@@ -1,0 +1,42 @@
+name: Upstream workflow sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync with upstream
+        run: |
+          git remote add upstream https://github.com/actions/starter-workflows.git 2>/dev/null || git remote set-url upstream https://github.com/actions/starter-workflows.git
+          git fetch upstream main
+          git checkout -B chore/sync-upstream main
+          git merge --no-edit upstream/main || true
+
+      - name: Create PR if changes exist
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync upstream starter-workflows"
+          title: "chore: sync with upstream starter-workflows"
+          body: |
+            Automated sync from the official GitHub Actions starter workflows repository.
+          branch: chore/sync-upstream
+          delete-branch: true
+          base: main

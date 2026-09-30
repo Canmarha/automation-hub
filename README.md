@@ -3,7 +3,8 @@
 This repository is the central automation and workflow template hub for the `Canmarha` GitHub account.
 
 This repo is designed to work with the upstream official source:
-- https://github.com/actions/starter-workflows
+
+- <https://github.com/actions/starter-workflows>
 
 ## What this repo does
 

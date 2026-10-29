@@ -26,7 +26,7 @@ jobs:
         run: |
           git remote add upstream https://github.com/actions/starter-workflows.git 2>/dev/null || git remote set-url upstream https://github.com/actions/starter-workflows.git
           git fetch upstream main
-          git checkout -B chore/sync-upstream main
+          git checkout main
           git merge --no-edit upstream/main || true
 
       - name: Create PR if changes exist
